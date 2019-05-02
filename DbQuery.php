@@ -41,4 +41,46 @@ class DbQuery extends DbConfig
     }
 
     
+    public function query($sql, $value =[])
+    {
+
+        $this->getConnection();
+
+        if(empty($value)){
+            $query = $this->pdo->query($sql);
+            if ($query !== false ) {
+                $query = true;
+            }
+        }
+        else {
+            $query = $this->pdo->prepare($sql);
+            $query = $query->execute($value);
+        }
+
+        return $query;
+    }
+
+
+
+    public function select($sql, $value =[])
+    {
+
+        $this->getConnection();
+
+        if(empty($value)){
+            $query = $this->pdo->query($sql);
+            if ($query == false ) {
+                die('erreur sql');
+            }
+        }
+        else {
+            $query = $this->pdo->prepare($sql);
+            $query->execute($value);
+        }
+
+        return $query->fetchall();
+
+    }
+
+
 }
