@@ -83,4 +83,43 @@ class DbQuery extends DbConfig
     }
 
 
+
+    public function selectAll($table = null,  $where = []){
+        if (!empty($table)) {
+
+            if (!empty($where)) {
+                $queryWhere = $this->where($where);
+                return $this->select("select * from $table $queryWhere[0]", $queryWhere[1] );
+            }
+            else {
+                return $this->select("select * from $table");
+
+            }
+        }
+        return null;
+    }
+
+    public function find($table = null, $id=null){
+        if (!empty($table) && !empty($id)) {
+            return $this->select("select * from $table where id = :id", ['id' => $id]);
+        }
+        return null;
+    }
+
+    public function where($array )
+    {
+        if (!empty($array) && (in_array(count($array), [2,3])) ) {
+            
+            $column = $array[0];
+            $operator = (count($array) == 2) ? '=' : $array[1];
+            $value = (count($array) == 2) ? $array[1] : $array[2];
+
+            $query = "where $column $operator :$column";
+            return array( $query, [$column => $value] );
+
+        }
+        die("erreur");
+    }
+
+
 }

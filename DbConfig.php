@@ -4,11 +4,12 @@
 class DbConfig
 {
 
+    private $configLink = "config.json";
     protected $data;
 
     function __construct()
     {
-        $fichier = file_get_contents("config.json");
+        $fichier = file_get_contents($configLink);
         $fichier = json_decode($fichier);
 
         $this->data['sgbd'] = $fichier->sgbd;
