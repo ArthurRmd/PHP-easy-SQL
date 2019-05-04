@@ -9,7 +9,7 @@ class DbConfig
 
     function __construct()
     {
-        $fichier = file_get_contents($configLink);
+        $fichier = file_get_contents($this->configLink);
         $fichier = json_decode($fichier);
 
         $this->data['sgbd'] = $fichier->sgbd;
@@ -39,9 +39,9 @@ class DbConfig
     {
 
         try {
-            $this->pdo = new PDO($this->getDns(), $this->getData('login'), $this->getData('pass'));
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $this->pdo;
+            $pdo = new PDO($this->getDns(), $this->getData('login'), $this->getData('pass'));
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $pdo;
         } catch (PDOException $e) {
             // echo "Erreur connexion à la base de donnée -> " . $e->getMessage();
             return null;
