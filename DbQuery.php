@@ -5,55 +5,25 @@ require './DbConfig.php';
 class DbQuery extends DbConfig   
 {
     
-    protected $connected;
-    protected $pdo;
-
-
-    public function checkConnected()
+    public static function close()
     {
-        if ($this->connected === null || $this->connected === false) {
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    public function getConnection()
-    {
-        if ($this->checkConnected()) {
-            return $this->pdo;
-        }else {
-            $this->pdo = $this->getPdo();
-
-            if ($this->getPdo() !== null ) {
-                $this->connected = true; 
-            } else {
-              die("erreur");  
-            }
-            
-        }
-    }
-
-    public function close()
-    {
-        $this->connected = false; 
-        $this->pdo = null; 
+        self::$pdo = null; 
     }
 
     
-    public function query($sql, $value =[])
+    public static function query($sql, $value =[])
     {
 
-        $this->getConnection();
+       self::getPdo();
 
         if(empty($value)){
-            $query = $this->pdo->query($sql);
+            $query = self::$pdo->query($sql);
             if ($query !== false ) {
                 $query = true;
             }
         }
         else {
-            $query = $this->pdo->prepare($sql);
+            $query = self::$pdo->prepare($sql);
             $query = $query->execute($value);
         }
 
@@ -62,19 +32,19 @@ class DbQuery extends DbConfig
 
 
 
-    public function select($sql, $value =[])
+    public static function select($sql, $value =[])
     {
 
-        $this->getConnection();
+        self::getPdo();
 
         if(empty($value)){
-            $query = $this->pdo->query($sql);
+            $query = self::$pdo->query($sql);
             if ($query == false ) {
                 die('erreur sql');
             }
         }
         else {
-            $query = $this->pdo->prepare($sql);
+            $query = self::$pdo->prepare($sql);
             $query->execute($value);
         }
 
@@ -84,29 +54,28 @@ class DbQuery extends DbConfig
 
 
 
-    public function selectAll($table = null,  $where = []){
+    public static function selectAll($table = null,  $where = []){
         if (!empty($table)) {
 
             if (!empty($where)) {
-                $queryWhere = $this->where($where);
-                return $this->select("select * from $table $queryWhere[0]", $queryWhere[1] );
+                $queryWhere = self::where($where);
+                return self::select("select * from $table $queryWhere[0]", $queryWhere[1] );
             }
             else {
-                return $this->select("select * from $table");
-
+                return self::select("select * from $table");
             }
         }
         return null;
     }
 
-    public function find($table = null, $id=null){
+    public static function find($table = null, $id=null){
         if (!empty($table) && !empty($id)) {
-            return $this->select("select * from $table where id = :id", ['id' => $id]);
+            return self::select("select * from $table where id = :id", ['id' => $id]);
         }
         return null;
     }
 
-    public function where($array )
+    private static function where($array )
     {
         if (!empty($array) && (in_array(count($array), [2,3])) ) {
             
