@@ -91,4 +91,31 @@ class DbQuery extends DbConfig
     }
 
 
+    public static function delete($table, $where)
+    {
+        $queryWhere = self::where($where);
+        self::query("delete from $table $queryWhere[0]", $queryWhere[1] );
+    }
+
+
+    public static function insert($table, $valueToInsert)
+    {
+       $array_key = array_keys($valueToInsert);
+       $firstQuery = "insert into $table ( ";
+       $secondQuery = " ) values ( ";
+
+       foreach ($array_key as $key) {
+            $firstQuery .= $key . ', ';
+            $secondQuery .= ":$key, ";
+        }
+    
+       self::query( substr($firstQuery, 0,-2) . substr($secondQuery, 0,-2). ')' , $valueToInsert);
+    }
+
+    
+
+   
+  
+ 
+
 }
