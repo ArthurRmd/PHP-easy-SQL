@@ -13,21 +13,16 @@ class DbQuery extends DbConfig
     
     public static function query($sql, $value =[])
     {
-
        self::getPdo();
-
+       
         if(empty($value)){
             $query = self::$pdo->query($sql);
-            if ($query !== false ) {
-                $query = true;
-            }
         }
         else {
             $query = self::$pdo->prepare($sql);
-            $query = $query->execute($value);
+            $query->execute($value);
         }
-
-        return $query;
+        return $query->rowCount();
     }
 
 
@@ -112,7 +107,21 @@ class DbQuery extends DbConfig
        self::query( substr($firstQuery, 0,-2) . substr($secondQuery, 0,-2). ')' , $valueToInsert);
     }
 
-    
+    public static function update( $table, $valueToUpdate, $where)
+    {
+        $queryWhere = self::where($where);
+        $query = "update $table set ";
+        $array_key = array_keys($valueToUpdate);
+        foreach ($array_key as $key) {     
+            $query .= "$key = :$key ,"; 
+        }
+        $query = substr($query,0,-1 )." $queryWhere[0]";
+        self::query( $query, array_merge($valueToUpdate, $queryWhere[1]));
+
+
+        
+
+    }
 
    
   
