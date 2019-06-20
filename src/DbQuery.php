@@ -35,7 +35,7 @@ class DbQuery extends DbConfig
             $query->execute($value);
         }
 
-        return $query->fetchall();
+        return $query->fetchall( self::$data['display'] );
 
     }
 

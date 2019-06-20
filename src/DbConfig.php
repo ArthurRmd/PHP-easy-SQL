@@ -20,6 +20,20 @@ class DbConfig
             self::$data['login'] = $fichier->login;
             self::$data['pass'] = $fichier->pass;
             self::$data['base'] = $fichier->base;
+            self::$data['display'] = self::getDisplay( $fichier->show_column_name , $fichier->show_column_number);
+        }
+    }
+
+    public static function getDisplay( $showColumnName, $showColumnNumber) 
+    {
+        if ( $showColumnName && !$showColumnNumber) {
+            return PDO::FETCH_ASSOC;
+
+        } elseif ( !$showColumnName && $showColumnNumber) {
+            return PDO::FETCH_NUM;
+
+        } else {
+            return PDO::FETCH_BOTH;
         }
     }
 

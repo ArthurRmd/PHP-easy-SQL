@@ -1,6 +1,7 @@
 {
     "name": "arthur-rmd/php-easy-sql",
-    "description": "Petite biblioth\u0000que facilitant les requ\u0000tes SQL en PHP.",
+    "description": "Petite bibliotheque facilitant les requetes SQL en PHP.",
+    "keywords": ["pdo","sql","mysql","database","light"],
     "type": "library",
     "license": "MIT",
     "authors": [

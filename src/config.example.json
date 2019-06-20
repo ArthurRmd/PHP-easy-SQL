@@ -3,5 +3,8 @@
     "serveur" : "localhost",
     "login" : "",
     "pass" : "",
-    "base" : ""
+    "base" : "",
+
+    "show_column_name" : true,
+    "show_column_number" : false
 }
